@@ -1,0 +1,23 @@
+   /**     * 打印二维码，使用的命令非（ESC/POS）。一般适用于便携式打印机。     *     * @param strCodedata           二维码字符串     * @param nWidthX               二维码每个模块的单元宽度，[1,16]     * @param nVersion              二维码版本大小，该值和二维码大小相关。 [0,16]     *                              （设置为0自动计算二维码大小，设置为10基本占满2寸纸，如果二维码超出纸张宽度则不会打印）     * @param nErrorCorrectionLevel 纠错等级。[1,4]     */    public void POS_S_SetQRcode(String strCodedata, int nWidthX, int nVersion,                                int nErrorCorrectionLevel) {        try {            if (nWidthX < 1 || nWidthX > 16 || nErrorCorrectionLevel < 1                    || nErrorCorrectionLevel > 4 || nVersion < 0                    || nVersion > 16)                throw new Exception("invalid args");            byte[] bCodeData = strCodedata.getBytes();            com.wzx.util.ESCCmd Cmd = new com.wzx.util.ESCCmd();            Cmd.GS_w_n[2] = (byte) nWidthX;            Cmd.GS_k_m_v_r_nL_nH[3] = (byte) nVersion;            Cmd.GS_k_m_v_r_nL_nH[4] = (byte) nErrorCorrectionLevel;            Cmd.GS_k_m_v_r_nL_nH[5] = (byte) (bCodeData.length & 0xff);            Cmd.GS_k_m_v_r_nL_nH[6] = (byte) ((bCodeData.length & 0xff00) >> 8);            byte[] data = byteArraysToBytes(new byte[][]{Cmd.GS_w_n,                    Cmd.GS_k_m_v_r_nL_nH, bCodeData});            mOutputStreamPrint.write(data, 0, data.length);        } catch (Exception ex) {            Log.i(TAG, ex.toString());        }    }
+
+
+
+
+
+
+
+
+
+
+
+    private byte[] byteArraysToBytes(byte[][] data) {
+        int length = 0;
+        for (int i = 0; i < data.length; i++)
+            length += data[i].length;
+        byte[] send = new byte[length];
+        int k = 0;
+        for (int i = 0; i < data.length; i++)
+            for (int j = 0; j < data[i].length; j++)
+                send[k++] = data[i][j];
+        return send;
+    }

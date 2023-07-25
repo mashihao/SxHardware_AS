@@ -1,0 +1,34 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "28.0.3"
+
+    defaultConfig {
+        applicationId "com.sinxin.sxhardware"
+        minSdkVersion 14
+        targetSdkVersion 26
+    }
+
+
+    signingConfigs {
+        release {
+            keyAlias "wms"
+            keyPassword "zxy123456"
+            storeFile file("../config/wms.jks")
+            storePassword "zxy123456"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+dependencies {
+    implementation 'com.android.support:support-v4:22.+'
+    implementation files('libs/core-3.3.3.jar')
+}

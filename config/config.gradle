@@ -1,0 +1,20 @@
+// 一些配置文件的保存
+// 使用git的commit记录当做versionCode
+static def gitVersionCode() {
+    def cmd = 'git rev-list HEAD --count'
+    return cmd.execute().text.trim().toInteger()
+}
+
+static def releaseBuildTime() {
+    return new Date().format("yyyy.MM.dd", TimeZone.getTimeZone("UTC"))
+}
+
+ext {
+    android = [compileSdkVersion: 31,
+               applicationId    : "com.base",
+               minSdkVersion    : 21,
+               targetSdkVersion : 31,
+               buildTime        : releaseBuildTime(),
+               versionCode      : gitVersionCode(),
+               versionName      : "1.x.x"]
+}
